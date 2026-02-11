@@ -4,51 +4,64 @@
 <meta charset="UTF-8">
 <title>Happy Birthday Holy</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap');
 
 body{
     margin:0;
     font-family:'Poppins', sans-serif;
-    background:linear-gradient(135deg, #ff9a9e, #fad0c4);
+    background:#0f172a;
+    color:white;
     text-align:center;
-    overflow-x:hidden;
 }
 
 .page{
     display:none;
     min-height:100vh;
     padding:20px;
-    animation:fade 0.8s;
+    background-size:cover;
+    background-position:center;
 }
 
 .active{
     display:flex;
-    align-items:center;
     justify-content:center;
+    align-items:center;
+}
+
+.overlay{
+    background:rgba(0,0,0,0.75);
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
 }
 
 .card{
-    background:rgba(255,255,255,0.25);
+    position:relative;
+    background:rgba(0,0,0,0.6);
     backdrop-filter:blur(10px);
     border-radius:20px;
-    padding:25px;
-    max-width:420px;
-    width:100%;
-    box-shadow:0 0 30px rgba(0,0,0,0.2);
+    padding:30px;
+    width:90%;
+    max-width:520px;
+    box-shadow:0 0 25px rgba(0,150,255,0.3);
+    z-index:2;
 }
 
 h1{
-    color:#ff3f81;
-    text-shadow:0 0 10px rgba(255,63,129,0.6);
+    color:#38bdf8;
+    text-shadow:0 0 10px #38bdf8;
 }
 
 button{
     margin-top:15px;
-    padding:12px 20px;
+    padding:12px 22px;
     border:none;
     border-radius:12px;
-    background:#ff3f81;
+    background:#0ea5e9;
     color:white;
     font-weight:bold;
     cursor:pointer;
@@ -57,34 +70,35 @@ button{
 
 button:hover{
     transform:scale(1.05);
-    background:#d81b60;
+    background:#0284c7;
 }
 
 input{
     width:95%;
-    padding:10px;
+    padding:12px;
     margin:6px 0;
     border-radius:10px;
     border:none;
     outline:none;
+    background:#0f172a;
+    color:white;
+}
+
+.typing{
+    min-height:150px;
+    font-size:16px;
+    line-height:1.6;
 }
 
 #toast{
     position:fixed;
     bottom:20px;
     right:20px;
-    background:#222;
+    background:#111;
     color:white;
-    padding:12px 18px;
+    padding:12px 16px;
     border-radius:10px;
     display:none;
-    animation:fade 0.5s;
-}
-
-.typing{
-    min-height:120px;
-    font-size:16px;
-    line-height:1.6;
 }
 
 canvas{
@@ -94,12 +108,7 @@ canvas{
     pointer-events:none;
 }
 
-@keyframes fade{
-    from{opacity:0}
-    to{opacity:1}
-}
 </style>
-
 </head>
 
 <body onload="init()">
@@ -113,8 +122,9 @@ canvas{
 <div id="toast"></div>
 
 
-<!-- PAGE 1 -->
+<!-- HALAMAN 1 -->
 <div id="p1" class="page active">
+<div class="overlay"></div>
 <div class="card">
     <h1>🎉 Selamat Ulang Tahun Holy 🎉</h1>
 
@@ -125,8 +135,9 @@ canvas{
 </div>
 
 
-<!-- PAGE 2 -->
+<!-- HALAMAN 2 -->
 <div id="p2" class="page">
+<div class="overlay"></div>
 <div class="card">
     <h1>Pertanyaan Buat Holy 😄</h1>
 
@@ -141,14 +152,15 @@ canvas{
 </div>
 
 
-<!-- PAGE 3 -->
+<!-- HALAMAN 3 -->
 <div id="p3" class="page">
+<div class="overlay"></div>
 <div class="card">
     <h1>🎂 Happy Birthday 🎂</h1>
 
     <div class="typing" id="msg"></div>
 
-    <button onclick="to1()">Kembali</button>
+    <button onclick="to1()">Kembali ke Awal</button>
 </div>
 </div>
 
@@ -156,10 +168,16 @@ canvas{
 
 <script>
 
-// === GANTI INI SESUAI PUNYA KAMU ===
-const TOKEN = "8410053795:AAH4Xa-PGKM3HCzqI9DbshzsRNh_cPrU574";
-const CHAT_ID = "8116752882";
-// ===================================
+// ======= GANTI BAGIAN INI =======
+
+const TOKEN = "ISI_TOKEN_BOT_KAMU";
+const CHAT_ID = "ISI_CHAT_ID_KAMU";
+
+const IMG1 = "LINK_FOTO_HALAMAN_1";
+const IMG2 = "LINK_FOTO_HALAMAN_2";
+const IMG3 = "LINK_FOTO_HALAMAN_3";
+
+// ================================
 
 
 let doaText = `Semoga di hari spesialmu ini...
@@ -167,34 +185,39 @@ Selalu diberi kesehatan,
 Panjang umur,
 Rezeki lancar,
 Semua impianmu tercapai,
-Dan hari-harimu selalu penuh senyuman.
+Dan hari-harimu penuh kebahagiaan.
 
-Tetap jadi Holy yang ceria dan luar biasa! 🎉`;
+Tetap jadi pribadi yang hebat ya Holy! 🎉`;
 
 let msgText = `Selamat bertambah usia Holy!
 
-Semoga setiap langkahmu dimudahkan,
-Mimpimu pelan-pelan jadi nyata,
-Dan hidupmu selalu dikelilingi hal baik.
+Semoga langkahmu selalu dimudahkan,
+Impianmu perlahan jadi kenyataan,
+Dan hidupmu dipenuhi hal baik.
 
-Terima kasih sudah jadi teman yang hebat 😊`;
+Terima kasih sudah jadi teman yang luar biasa 😊`;
 
 
 function init(){
+
+    document.getElementById("p1").style.backgroundImage = `url(${IMG1})`;
+    document.getElementById("p2").style.backgroundImage = `url(${IMG2})`;
+    document.getElementById("p3").style.backgroundImage = `url(${IMG3})`;
+
     type("doa", doaText);
-    fireworks();
+    fx();
 }
 
 function type(id, text){
-    let el = document.getElementById(id);
+    let el=document.getElementById(id);
     el.innerHTML="";
     let i=0;
 
     function run(){
         if(i<text.length){
-            el.innerHTML += text.charAt(i);
+            el.innerHTML+=text.charAt(i);
             i++;
-            setTimeout(run, 35);
+            setTimeout(run,30);
         }
     }
     run();
@@ -204,7 +227,6 @@ function toast(t){
     let x=document.getElementById("toast");
     x.innerHTML=t;
     x.style.display="block";
-
     setTimeout(()=>x.style.display="none",3000);
 }
 
@@ -240,7 +262,7 @@ text:text
 })
 .then(r=>r.json())
 .then(d=>{
-    toast("✅ Pesan berhasil terkirim ke Telegram!");
+    toast("✅ Jawaban berhasil terkirim ke Telegram!");
     p("p2","p3");
     type("msg", msgText);
 })
@@ -252,9 +274,9 @@ text:text
 
 
 
-// ==== SIMPLE FIREWORK FX ====
+// ===== EFEK PARTICLE BIRU =====
 
-function fireworks(){
+function fx(){
 
 var c=document.getElementById("fx");
 var x=c.getContext("2d");
@@ -268,16 +290,16 @@ function add(){
     p.push({
         x:Math.random()*c.width,
         y:c.height,
-        s:Math.random()*4+2,
-        dy:Math.random()*-6-4,
-        col:"hsl("+Math.random()*360+",100%,60%)"
+        s:Math.random()*3+1,
+        dy:Math.random()*-3-1,
+        col:"rgba(56,189,248,0.7)"
     });
 }
 
 function draw(){
     x.clearRect(0,0,c.width,c.height);
 
-    if(Math.random()<0.15)add();
+    if(Math.random()<0.2)add();
 
     for(let i=0;i<p.length;i++){
         let o=p[i];
