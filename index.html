@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Happy Birthday Holy</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap');
+
+body{
+    margin:0;
+    font-family:'Poppins', sans-serif;
+    background:linear-gradient(135deg, #ff9a9e, #fad0c4);
+    text-align:center;
+    overflow-x:hidden;
+}
+
+.page{
+    display:none;
+    min-height:100vh;
+    padding:20px;
+    animation:fade 0.8s;
+}
+
+.active{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.card{
+    background:rgba(255,255,255,0.25);
+    backdrop-filter:blur(10px);
+    border-radius:20px;
+    padding:25px;
+    max-width:420px;
+    width:100%;
+    box-shadow:0 0 30px rgba(0,0,0,0.2);
+}
+
+h1{
+    color:#ff3f81;
+    text-shadow:0 0 10px rgba(255,63,129,0.6);
+}
+
+button{
+    margin-top:15px;
+    padding:12px 20px;
+    border:none;
+    border-radius:12px;
+    background:#ff3f81;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    transform:scale(1.05);
+    background:#d81b60;
+}
+
+input{
+    width:95%;
+    padding:10px;
+    margin:6px 0;
+    border-radius:10px;
+    border:none;
+    outline:none;
+}
+
+#toast{
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    background:#222;
+    color:white;
+    padding:12px 18px;
+    border-radius:10px;
+    display:none;
+    animation:fade 0.5s;
+}
+
+.typing{
+    min-height:120px;
+    font-size:16px;
+    line-height:1.6;
+}
+
+canvas{
+    position:fixed;
+    top:0;
+    left:0;
+    pointer-events:none;
+}
+
+@keyframes fade{
+    from{opacity:0}
+    to{opacity:1}
+}
+</style>
+
+</head>
+
+<body onload="init()">
+
+<canvas id="fx"></canvas>
+
+<audio id="music" loop>
+  <source src="https://files.catbox.moe/6c9wh0.m4a" type="audio/mpeg">
+</audio>
+
+<div id="toast"></div>
+
+
+<!-- PAGE 1 -->
+<div id="p1" class="page active">
+<div class="card">
+    <h1>🎉 Selamat Ulang Tahun Holy 🎉</h1>
+
+    <div class="typing" id="doa"></div>
+
+    <button onclick="to2()">Lanjut</button>
+</div>
+</div>
+
+
+<!-- PAGE 2 -->
+<div id="p2" class="page">
+<div class="card">
+    <h1>Pertanyaan Buat Holy 😄</h1>
+
+    <input id="a1" placeholder="Hal paling menyenangkan tahun ini?">
+    <input id="a2" placeholder="Mimpi terbesar kamu?">
+    <input id="a3" placeholder="Orang paling berkesan?">
+    <input id="a4" placeholder="Harapan di umur baru?">
+    <input id="a5" placeholder="Makanan favorit?">
+
+    <button onclick="send()">Kirim Jawaban</button>
+</div>
+</div>
+
+
+<!-- PAGE 3 -->
+<div id="p3" class="page">
+<div class="card">
+    <h1>🎂 Happy Birthday 🎂</h1>
+
+    <div class="typing" id="msg"></div>
+
+    <button onclick="to1()">Kembali</button>
+</div>
+</div>
+
+
+
+<script>
+
+// === GANTI INI SESUAI PUNYA KAMU ===
+const TOKEN = "ISI_TOKEN_BOT_KAMU";
+const CHAT_ID = "ISI_CHAT_ID_KAMU";
+// ===================================
+
+
+let doaText = `Semoga di hari spesialmu ini...
+Selalu diberi kesehatan,
+Panjang umur,
+Rezeki lancar,
+Semua impianmu tercapai,
+Dan hari-harimu selalu penuh senyuman.
+
+Tetap jadi Holy yang ceria dan luar biasa! 🎉`;
+
+let msgText = `Selamat bertambah usia Holy!
+
+Semoga setiap langkahmu dimudahkan,
+Mimpimu pelan-pelan jadi nyata,
+Dan hidupmu selalu dikelilingi hal baik.
+
+Terima kasih sudah jadi teman yang hebat 😊`;
+
+
+function init(){
+    type("doa", doaText);
+    fireworks();
+}
+
+function type(id, text){
+    let el = document.getElementById(id);
+    el.innerHTML="";
+    let i=0;
+
+    function run(){
+        if(i<text.length){
+            el.innerHTML += text.charAt(i);
+            i++;
+            setTimeout(run, 35);
+        }
+    }
+    run();
+}
+
+function toast(t){
+    let x=document.getElementById("toast");
+    x.innerHTML=t;
+    x.style.display="block";
+
+    setTimeout(()=>x.style.display="none",3000);
+}
+
+function to2(){
+    p("p1","p2");
+    document.getElementById("music").play();
+}
+
+function to1(){ p("p3","p1"); }
+
+function p(a,b){
+    document.getElementById(a).classList.remove("active");
+    document.getElementById(b).classList.add("active");
+}
+
+function send(){
+
+let text = `🎉 JAWABAN DARI HOLY 🎉
+
+1. ${a1.value}
+2. ${a2.value}
+3. ${a3.value}
+4. ${a4.value}
+5. ${a5.value}`;
+
+fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`,{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+chat_id:CHAT_ID,
+text:text
+})
+})
+.then(r=>r.json())
+.then(d=>{
+    toast("✅ Pesan berhasil terkirim ke Telegram!");
+    p("p2","p3");
+    type("msg", msgText);
+})
+.catch(e=>{
+    toast("❌ Gagal kirim, cek TOKEN / CHAT ID!");
+});
+
+}
+
+
+
+// ==== SIMPLE FIREWORK FX ====
+
+function fireworks(){
+
+var c=document.getElementById("fx");
+var x=c.getContext("2d");
+
+c.width=innerWidth;
+c.height=innerHeight;
+
+var p=[];
+
+function add(){
+    p.push({
+        x:Math.random()*c.width,
+        y:c.height,
+        s:Math.random()*4+2,
+        dy:Math.random()*-6-4,
+        col:"hsl("+Math.random()*360+",100%,60%)"
+    });
+}
+
+function draw(){
+    x.clearRect(0,0,c.width,c.height);
+
+    if(Math.random()<0.15)add();
+
+    for(let i=0;i<p.length;i++){
+        let o=p[i];
+
+        o.y+=o.dy;
+
+        x.fillStyle=o.col;
+        x.beginPath();
+        x.arc(o.x,o.y,o.s,0,Math.PI*2);
+        x.fill();
+
+        if(o.y<0)p.splice(i,1);
+    }
+
+    requestAnimationFrame(draw);
+}
+
+draw();
+
+}
+
+</script>
+
+</body>
+</html>
